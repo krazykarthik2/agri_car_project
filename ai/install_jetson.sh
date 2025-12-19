@@ -1,0 +1,1 @@
+python3 -m pip install $(grep -v "^opencv-python" requirements.txt)
