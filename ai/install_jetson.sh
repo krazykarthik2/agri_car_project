@@ -1,1 +1,1 @@
-python3 -m pip install $(grep -v "^opencv-python" requirements.txt)
+python3 -m pip install $(grep -Ev "^(opencv-python|mediapipe)" requirements.txt)
