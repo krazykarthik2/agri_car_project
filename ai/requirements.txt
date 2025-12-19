@@ -4,3 +4,4 @@ shapely
 numpy
 ultralytics
 scikit-image
+timm
