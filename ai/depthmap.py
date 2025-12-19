@@ -40,7 +40,6 @@ class DepthEstimator:
         # Apply transforms and move to device
         input_batch = self.transform(img).to(self.device)
 
-        # Predict
         with torch.no_grad():
             prediction = self.midas(input_batch)
             
@@ -49,11 +48,9 @@ class DepthEstimator:
             prediction = torch.nn.functional.interpolate(
                 prediction.unsqueeze(1),
                 size=img.shape[:2],
-                mode="bicubic",
-                align_corners=False,
+                mode="bicubic"
             ).squeeze()
 
-        # Post-process for visualization
         depth_map = prediction.cpu().numpy()
         
         # Normalize depth map to 0-255 for 8-bit image visualization
@@ -102,23 +99,23 @@ def main():
         
         # Visualization Mode
         if args.view == 'blended':
-             # 0.6 Original + 0.4 Depth Map
             display_img = cv2.addWeighted(frame, 0.6, depth_map_color, 0.4, 0)
         elif args.view == 'side-by-side':
-            # Resize both to 50% width/height to fit on screen
-            small_frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
-            small_depth = cv2.resize(depth_map_color, (0,0), fx=0.5, fy=0.5)
-            display_img = np.hstack((small_frame, small_depth))
+            sf = cv2.resize(frame, None, fx=0.5, fy=0.5)
+            sd = cv2.resize(depth_map_color, None, fx=0.5, fy=0.5)
+            display_img = np.hstack((sf, sd))
         else:
             display_img = depth_map_color
-        
-        cv2.imshow('MiDaS Depth Estimation', display_img)
-        
-        if cv2.waitKey(1) & 0xFF == 27: # ESC key
+
+        cv2.imshow("MiDaS Depth Estimation", display_img)
+
+        if cv2.waitKey(1) == 27:
             break
-            
+
     cap.release()
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
+
+
