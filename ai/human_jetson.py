@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
-import tntorch  # TensorRT python loader (or use trt-engine API)
+from tensorflow_lite_support.task.vision import PoseLandmarker
 
-engine = tntorch.load("movenet_lightning_fp16.trt")
+# Initialize PoseLandmarker
+landmarker = PoseLandmarker(model_path="pose_landmarker_lite.task")  # Adjust model path as needed
 
 cap = cv2.VideoCapture(0)
 while cap.isOpened():
@@ -14,9 +15,9 @@ while cap.isOpened():
     img = img.astype(np.float32) / 255.0
     img = img.transpose(2, 0, 1)[None, :, :, :]
 
-    outputs = engine(img)  # run inference
-    # (standard MoveNet output parsing)
-    keypoints = outputs[0]  # Assuming outputs contains keypoints
+    outputs = landmarker.detect(img)  # Use PoseLandmarker for inference
+    keypoints = outputs.keypoints  # Access keypoints from outputs
+
     for i in range(len(keypoints)):
         x, y, confidence = keypoints[i]
         if confidence > 0.5:  # Only draw keypoints with high confidence
@@ -32,4 +33,4 @@ while cap.isOpened():
     cv2.imshow("Pose", frame)
     if cv2.waitKey(1) == 27:
         break
-cap.release()
+cap.release()  # END: Release resources
