@@ -7,17 +7,17 @@ import argparse
 class DepthEstimator:
     def __init__(self, model_type="MiDaS_small"):
         self.model_type = model_type
-        print(f"Loading {model_type} from torch.hub...")
+        print("Loading {} from torch.hub...".format(model_type))
         
         try:
             self.midas = torch.hub.load("intel-isl/MiDaS", model_type)
         except Exception as e:
-            print(f"Error loading model: {e}")
+            print("Error loading model: {}".format(e))
             raise e
 
         # Select device (GPU if available is heavily optimized, else CPU)
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        print(f"Running on device: {self.device}")
+        print("Running on device: {}".format(self.device))
         self.midas.to(self.device)
         self.midas.eval()
 
@@ -76,7 +76,7 @@ def main():
     try:
         estimator = DepthEstimator(args.model)
     except Exception as e:
-        print(f"Failed to initialize DepthEstimator: {e}")
+        print("Failed to initialize DepthEstimator: {}".format(e))
         return
 
     # Open Webcam

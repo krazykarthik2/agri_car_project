@@ -20,7 +20,7 @@ def check_intersection(multi_pose_landmarks, polygons, image_width, image_height
     
     # Initialize all as clear first
     for i in range(len(polygons)):
-        status[i+1] = f"clear,{i+1}"
+        status[i+1] = "clear,{}".format(i+1)
         
     if not multi_pose_landmarks:
         return status
@@ -46,7 +46,7 @@ def check_intersection(multi_pose_landmarks, polygons, image_width, image_height
                     break
         
         if is_occupied:
-            status[frame_num] = f"enter,{frame_num}"
+            status[frame_num] = "enter,{}".format(frame_num)
             
     return status
 
@@ -139,12 +139,12 @@ def main():
             if detection_result.pose_landmarks:
                 status_updates = check_intersection(detection_result.pose_landmarks, shapely_polys, image_width, image_height)
             else:
-                status_updates = {i+1: f"clear,{i+1}" for i in range(len(shapely_polys))}
+                status_updates = {i+1: "clear,{}".format(i+1) for i in range(len(shapely_polys))}
             
             # Draw Polygons and Status
             for i, poly_pts in enumerate(numpy_polys):
                 frame_num = i + 1
-                curr_status = status_updates.get(frame_num, f"clear,{frame_num}")
+                curr_status = status_updates.get(frame_num, "clear,{}".format(frame_num))
                 
                 if "enter" in curr_status:
                     poly_color = (0, 0, 255) # Red

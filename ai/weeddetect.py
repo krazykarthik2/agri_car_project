@@ -144,11 +144,11 @@ def main():
                         is_grass = any(k in class_name.lower() for k in keywords)
                         
                         # Hack for testing if model classes are obscure:
-                        # print(f"Detected: {class_name}") 
+                        # print("Detected: {}".format(class_name)) 
                         
                         conf = top1_conf
                     except Exception as e:
-                        print(f"Inference error: {e}")
+                        print("Inference error: {}".format(e))
                         is_grass = False
                         conf = 0.0
                 
@@ -191,7 +191,7 @@ def main():
                     # "activated" flag in item ensures single print per item.
                     if not item['activated']:
                         item['activated'] = True
-                        msg = f"ACTIVATE! P{item['poly_idx']+1} | Y={target_y} (Offset)"
+                        msg = "ACTIVATE! P{} | Y={} (Offset)".format(item['poly_idx']+1, target_y)
                         print(msg)
                         active_notifications.append({'msg': msg, 'added': time.time(), 'is_grass': True})
 
@@ -237,11 +237,11 @@ def main():
         for i, poly in enumerate(polygons):
             color = (255, 0, 0)
             cv2.polylines(combined_img, [poly], True, color, 2)
-            cv2.putText(combined_img, f"P{i+1}", (poly[0][0], poly[0][1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+            cv2.putText(combined_img, "P{}".format(i+1), (poly[0][0], poly[0][1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 
         # Draw Y info & Time since snip
-        cv2.putText(combined_img, f"Y: {current_y:.1f} | Offset: {OFFSET_Y}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
-        cv2.putText(combined_img, f"Time Since Snip: {time_since_last_snip:.2f}s", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+        cv2.putText(combined_img, "Y: {:.1f} | Offset: {}".format(current_y, OFFSET_Y), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+        cv2.putText(combined_img, "Time Since Snip: {:.2f}s".format(time_since_last_snip), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
         cv2.putText(combined_img, "Use 'W' (Up) / 'S' (Down) to move Y", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
 
         # Draw Notifications
